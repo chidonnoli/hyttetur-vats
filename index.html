@@ -2,7 +2,7 @@
 <html lang="no">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Hyttetur — Vats, Hallingdal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -154,16 +154,17 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    padding: 1.2rem 2rem;
+    padding: calc(1.2rem + env(safe-area-inset-top)) 2rem 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background 0.4s, backdrop-filter 0.4s;
+    background: rgba(44, 31, 20, 0.92);
+    backdrop-filter: blur(12px);
+    transition: background 0.4s;
   }
 
   nav.scrolled {
-    background: rgba(44, 31, 20, 0.92);
-    backdrop-filter: blur(12px);
+    background: rgba(44, 31, 20, 0.97);
   }
 
   .nav-logo {
