@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyttetur — Vats, Hallingdal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bark: #2C1F14;
+    --pine: #3B4A3A;
+    --stone: #8C7B6B;
+    --birch: #F2EDE6;
+    --snow: #FAFAF8;
+    --moss: #6B7C5E;
+    --ember: #C4632A;
+    --fog: rgba(242,237,230,0.85);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--snow);
+    color: var(--bark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bark);
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(107,124,94,0.35) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(196,99,42,0.15) 0%, transparent 50%),
+      linear-gradient(160deg, #1a120a 0%, #2C1F14 40%, #3B3020 100%);
+  }
+
+  /* Fjell silhuetter */
+  .mountains {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 55%;
+  }
+  .mountains svg { width: 100%; height: 100%; }
+
+  /* Stjerner */
+  .stars {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: rgba(242,237,230,0.7);
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    z-index: 10;
+    padding: 2rem;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 12vw, 8rem);
+    font-weight: 300;
+    color: var(--birch);
+    line-height: 0.9;
+    margin-bottom: 0.4rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--ember);
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 300;
+    color: rgba(242,237,230,0.6);
+    margin-top: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(242,237,230,0.4);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 10;
+    animation: fadeUp 1.2s 0.6s ease both;
+  }
+
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, rgba(242,237,230,0.5), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 0.5; }
+    50% { transform: scaleY(1.3); opacity: 1; }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+
+  nav.scrolled {
+    background: rgba(44, 31, 20, 0.92);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--birch);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.3rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(242,237,230,0.7);
+    text-decoration: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 2rem;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--birch);
+    background: rgba(242,237,230,0.1);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 6rem 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--ember);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--bark);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title em { font-style: italic; color: var(--pine); }
+
+  .section-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(44,31,20,0.75);
+    font-weight: 300;
+  }
+
+  /* ── INFO CARDS ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .info-card {
+    background: var(--birch);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(140,123,107,0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(44,31,20,0.1);
+  }
+
+  .card-icon {
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--bark);
+    margin-bottom: 0.4rem;
+  }
+
+  .card-text {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--stone);
+  }
+
+  /* ── ROOMS ── */
+  .rooms-list {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .room-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: var(--birch);
+    border-radius: 0.75rem;
+    border-left: 3px solid var(--moss);
+  }
+
+  .room-icon { display: none; }
+
+  .room-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--bark);
+  }
+
+  .room-desc { font-size: 0.82rem; color: var(--stone); }
+
+  /* ── DIRECTIONS ── */
+  .steps-list {
+    margin-top: 2rem;
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .step-num {
+    counter-increment: step;
+    width: 2.5rem; height: 2.5rem;
+    background: var(--bark);
+    color: var(--birch);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    flex-shrink: 0;
+  }
+
+  .step-text {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(44,31,20,0.75);
+    padding-top: 0.5rem;
+  }
+
+  /* ── ACTIVITIES ── */
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .activity-card {
+    position: relative;
+    padding: 1.8rem 1.5rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: default;
+    transition: transform 0.2s;
+  }
+
+  .activity-card:hover { transform: translateY(-4px); }
+
+  .activity-card.ski { background: linear-gradient(135deg, #3B4A3A 0%, #2a3729 100%); }
+  .activity-card.hike { background: linear-gradient(135deg, #5C4A35 0%, #3d3020 100%); }
+  .activity-card.fish { background: linear-gradient(135deg, #2E4050 0%, #1e2d3a 100%); }
+  .activity-card.alpin { background: linear-gradient(135deg, #6B3A2A 0%, #4a2519 100%); }
+
+  .activity-icon { display: none; }
+  .activity-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--birch);
+    margin-bottom: 0.3rem;
+  }
+  .activity-desc { font-size: 0.8rem; color: rgba(242,237,230,0.6); line-height: 1.5; }
+
+  /* ── RULES ── */
+  .rules-list {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 0.6rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .rule-item.warn { background: rgba(196,99,42,0.08); color: var(--bark); }
+  .rule-item.ok   { background: rgba(107,124,94,0.1); color: var(--bark); }
+  .rule-dot { 
+    font-size: 0.5rem; 
+    flex-shrink: 0; 
+    margin-top: 0.45rem;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+  }
+
+  /* ── PAKKELISTE ── */
+  .packlist-wrap {
+    margin-top: 2rem;
+  }
+
+  .packlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+  }
+
+  .pack-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .pack-progress-bar {
+    width: 120px;
+    height: 4px;
+    background: rgba(140,123,107,0.2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .pack-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--moss), var(--ember));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .pack-progress-text {
+    font-size: 0.75rem;
+    color: var(--stone);
+  }
+
+  .pack-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pack-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1rem;
+    background: var(--birch);
+    border-radius: 0.7rem;
+    border: 1px solid rgba(140,123,107,0.12);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    user-select: none;
+  }
+
+  .pack-item:hover { transform: translateX(3px); }
+
+  .pack-item.done {
+    background: rgba(107,124,94,0.1);
+    border-color: rgba(107,124,94,0.2);
+  }
+
+  .pack-check {
+    width: 1.3rem; height: 1.3rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(140,123,107,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+    color: transparent;
+  }
+
+  .pack-item.done .pack-check {
+    background: var(--moss);
+    border-color: var(--moss);
+    color: white;
+  }
+
+  .pack-label {
+    font-size: 0.9rem;
+    color: var(--bark);
+    transition: color 0.2s;
+    flex: 1;
+  }
+
+  .pack-item.done .pack-label {
+    color: var(--stone);
+    text-decoration: line-through;
+    text-decoration-color: rgba(107,124,94,0.5);
+  }
+
+  .pack-delete {
+    opacity: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--stone);
+    font-size: 0.85rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    transition: opacity 0.15s, color 0.15s, background 0.15s;
+  }
+
+  .pack-item:hover .pack-delete { opacity: 1; }
+  .pack-delete:hover { color: var(--ember); background: rgba(196,99,42,0.1); }
+
+  /* Add new item */
+  .add-item-row {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .add-item-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(140,123,107,0.25);
+    border-radius: 0.7rem;
+    background: var(--birch);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--bark);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .add-item-input:focus { border-color: var(--moss); }
+  .add-item-input::placeholder { color: rgba(140,123,107,0.5); }
+
+  .add-item-btn {
+    padding: 0.75rem 1.2rem;
+    background: var(--bark);
+    color: var(--birch);
+    border: none;
+    border-radius: 0.7rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+
+  .add-item-btn:hover { background: var(--pine); transform: scale(1.02); }
+  .add-item-btn:active { transform: scale(0.98); }
+
+  .pack-reset {
+    margin-top: 0.8rem;
+    background: none;
+    border: 1px solid rgba(140,123,107,0.25);
+    color: var(--stone);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .pack-reset:hover { color: var(--bark); border-color: var(--stone); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(140,123,107,0.3), transparent);
+    margin: 0 auto;
+    max-width: 800px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bark);
+    color: rgba(242,237,230,0.5);
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+  }
+
+  footer a { color: rgba(242,237,230,0.7); text-decoration: none; }
+
+  /* ── NOTIFICATION TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--pine);
+    color: var(--birch);
+    padding: 0.7rem 1.4rem;
+    border-radius: 2rem;
+    font-size: 0.82rem;
+    z-index: 999;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── 1. MAI BANNER ── */
+  .mai-banner {
+    background: var(--bark);
+    color: var(--birch);
+    text-align: center;
+    padding: 1rem 2rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .mai-banner strong {
+    color: var(--ember);
+    font-weight: 500;
+  }
+
+  /* ── LINKS ── */
+  .activity-links {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .activity-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    background: var(--birch);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: var(--bark);
+    font-size: 0.88rem;
+    border: 1px solid rgba(140,123,107,0.15);
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .activity-link:hover {
+    background: rgba(107,124,94,0.12);
+    transform: translateX(4px);
+  }
+
+  .activity-link-label { font-weight: 400; }
+  .activity-link-url { font-size: 0.72rem; color: var(--stone); letter-spacing: 0.05em; }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .section { padding: 4rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo"></div>
+  <ul class="nav-links">
+    <li><a href="#om">Om hytta</a></li>
+    <li><a href="#veibeskrivelse">Veibeskrivelse</a></li>
+    <li><a href="#aktiviteter">Aktiviteter</a></li>
+    <li><a href="#regler">Regler</a></li>
+    <li><a href="#pakkeliste">Pakkeliste</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="stars" id="stars"></div>
+  <div class="mountains">
+    <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,400 0,280 180,120 360,250 540,80 720,200 900,60 1080,180 1260,100 1440,220 1440,400" fill="#1a120a" opacity="0.9"/>
+      <polygon points="0,400 0,320 120,200 300,300 500,160 680,260 860,140 1040,240 1200,170 1440,250 1440,400" fill="#2C1F14"/>
+    </svg>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" style="visibility:hidden;">&#8203;</p>
+    <h1 class="hero-title">Hyttetur<br><em>Hallingdal</em></h1>
+    <p class="hero-subtitle">Vats, Ål &nbsp;&middot;&nbsp; 30. april – 3. mai</p>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('om').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-line"></div>
+    Utforsk
+  </div>
+</section>
+
+<!-- OM HYTTA -->
+<section class="section" id="om">
+  <p class="section-label">Om stedet</p>
+  <h2 class="section-title">Velkommen til<br><em>vår bedriftshytte</em></h2>
+  <p class="section-body">Hytta ligger på Vats i Ål kommune i Hallingdal — et område skapt for fjellvandrere, skiløpere og fiskere. Her venter ro, frisk fjellluft og ekte norsk natur.</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="card-icon">Innkvartering</span>
+      <div class="card-title">12 sengeplasser</div>
+      <div class="card-text">Fordelt på 3 rom + 2 hemser for barn.</div>
+    </div>
+    <div class="info-card">
+      <span class="card-icon">Beliggenhet</span>
+      <div class="card-title">Vestenden av Vatsfjorden</div>
+      <div class="card-text">150 m fra hovedveien mot Bergsjøstølen.</div>
+    </div>
+    <div class="info-card">
+      <span class="card-icon">Reisetid</span>
+      <div class="card-title">Ca. 3,5 timer fra Oslo</div>
+      <div class="card-text">Eller ta tog og buss — bil er ikke nødvendig.</div>
+    </div>
+    <div class="info-card">
+      <span class="card-icon">Fasiliteter</span>
+      <div class="card-title">Badstu, peis og bålpanne</div>
+      <div class="card-text">Hytta har badstu, peis innendørs og bålpanne ute.</div>
+    </div>
+    <div class="info-card">
+      <span class="card-icon">El-bil</span>
+      <div class="card-title">Lademulighet</div>
+      <div class="card-text">Strømuttak for el-bil på hjørnet ut mot parkeringsplass.</div>
+    </div>
+    <div class="info-card">
+      <span class="card-icon">Dagligvare</span>
+      <div class="card-title">Kiwi Ål — 20 min</div>
+      <div class="card-text">Kiwi i Ål sentrum, ca. 20 minutters kjøring fra hytta. Døgnåpen butikk også i Leveld.</div>
+    </div>
+    <div class="info-card">
+      <span class="card-icon">Obs</span>
+      <div class="card-title">Ingen internett</div>
+      <div class="card-text">Det er ikke internettforbindelse på hytta. Last ned kart og musikk på forhånd.</div>
+    </div>
+  </div>
+
+  <div class="rooms-list" style="margin-top:2.5rem;">
+    <p class="section-label" style="margin-bottom:1rem;">Soverom</p>
+    <div class="room-item">
+      <span class="room-icon"></span>
+      <div>
+        <div class="room-name">Rom 1</div>
+        <div class="room-desc">1 dobbeltseng + 1 enkeltseng</div>
+      </div>
+    </div>
+    <div class="room-item">
+      <span class="room-icon"></span>
+      <div>
+        <div class="room-name">Rom 2</div>
+        <div class="room-desc">1 dobbeltseng</div>
+      </div>
+    </div>
+    <div class="room-item">
+      <span class="room-icon"></span>
+      <div>
+        <div class="room-name">Rom 3</div>
+        <div class="room-desc">1 enkeltseng</div>
+      </div>
+    </div>
+    <div class="room-item" style="border-left-color: var(--ember);">
+      <span class="room-icon"></span>
+      <div>
+        <div class="room-name">2 hemser</div>
+        <div class="room-desc">3 madrasser hver — passer best for barn</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- VEIBESKRIVELSE -->
+<section class="section" id="veibeskrivelse">
+  <p class="section-label">Finn veien</p>
+  <h2 class="section-title">Veibeskrivelse<br><em>til hytta</em></h2>
+  <p class="section-body">Adressen er <strong>Nordbygdvegen 1710, 3570 Ål</strong>. Du kan også reise kollektivt — ta tog og buss med Hallingdal Billag (tlf. 32 08 60 60 eller <a href="http://www.177.as" target="_blank" style="color:var(--ember);">177.as</a>).</p>
+
+  <div class="steps-list">
+    <div class="step"><div class="step-num">1</div><div class="step-text">Kjør <strong>RV 7</strong> mot Ål.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-text">3 km før Ål tar du av til <strong>Vats</strong> — skilt på høyre side.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-text">Følg <strong>FV244</strong> til høyre, 16 km. Vatsfjorden ligger til venstre.</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-text">Passerer du et skilt til <strong>Brattegardjordet</strong> på høyre side, er du nesten fremme. Kjør inn i 60-sonen med gatebelysning.</div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-text">Se etter et lite <strong>rødt hus fra 1929</strong> (gamleskolen) på venstre side, og et større rødmalt 60-tallsbygg med store vinduer på høyre side.</div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-text">Rett etter skolegjerdet tar du av til <strong>høyre gjennom en treenkel grind</strong>. <em>Husk å stenge grinda — det går sauer her!</em></div></div>
+    <div class="step"><div class="step-num">7</div><div class="step-text">Følg grusveien bratt oppover. Sving til <strong>venstre</strong> etter 100 m — hytta er brunbeist på venstre hånd. Parkering rett frem langs gjerdet.</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AKTIVITETER -->
+<section class="section" id="aktiviteter">
+  <p class="section-label">Friluftsliv</p>
+  <h2 class="section-title">Aktiviteter<br><em>i nærområdet</em></h2>
+  <p class="section-body">Nærområdet byr på gode turmuligheter til fots, langs vann og i fjellet.</p>
+
+  <div class="activities-grid">
+    <div class="activity-card hike">
+      <div class="activity-name">Fjellvandring</div>
+      <div class="activity-desc">Godt oppmerket terreng hele sommeren. Kart over Reineskarvet henger på hytteveggen — anbefales for alle.</div>
+    </div>
+    <div class="activity-card fish">
+      <div class="activity-name">Fiske</div>
+      <div class="activity-desc">Fiskekort til Vatsfjorden kjøpes via Inatur.no. Flere fiskevann noen minutters kjøring fra hytta. Husk fiskekort!</div>
+    </div>
+    <div class="activity-card" style="background: linear-gradient(135deg, #4A3B2A 0%, #2e2518 100%);">
+      <div class="activity-name">Ridning</div>
+      <div class="activity-desc">Ridesenter med islandshester på veien til Bergsjøstølen.</div>
+    </div>
+  </div>
+
+  <div class="activity-links">
+    <a class="activity-link" href="https://www.visitnorway.com/places-to-go/eastern-norway/hallingdal/al/" target="_blank" rel="noopener">
+      <span class="activity-link-label">Visit Norway — Ål i Hallingdal</span>
+      <span class="activity-link-url">visitnorway.com &rarr;</span>
+    </a>
+    <a class="activity-link" href="https://www.aal52.no/no/vats/" target="_blank" rel="noopener">
+      <span class="activity-link-label">Turtips og info om Vats</span>
+      <span class="activity-link-url">aal52.no &rarr;</span>
+    </a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- REGLER -->
+<section class="section" id="regler">
+  <p class="section-label">Husregler</p>
+  <h2 class="section-title">Viktig å<br><em>huske på</em></h2>
+  <p class="section-body">Slik at hytta er fin for alle som bruker den.</p>
+
+  <div class="rules-list">
+    <div class="rule-item warn">
+      <span class="rule-dot"></span>
+      <span>Ikke kast våtservietter, matrester eller lignende i toalettet — kloakkrøret tettes av slike ting.</span>
+    </div>
+    <div class="rule-item warn">
+      <span class="rule-dot"></span>
+      <span>Røykeforbud inne i hytta.</span>
+    </div>
+    <div class="rule-item warn">
+      <span class="rule-dot"></span>
+      <span>Ingen dyr tillatt — gjelder også «allergifrie» raser.</span>
+    </div>
+    <div class="rule-item ok">
+      <span class="rule-dot"></span>
+      <span>Meld fra om eventuelle vannlekkasjer eller skader på hytta umiddelbart.</span>
+    </div>
+    <div class="rule-item ok">
+      <span class="rule-dot"></span>
+      <span>Husk å stenge grinda ved innkjøringen — det går sauer i området!</span>
+    </div>
+    <div class="rule-item warn">
+      <span class="rule-dot"></span>
+      <span>Fredag <strong>1. mai</strong> er offentlig fridag — planlegg reise og innkjøp deretter.</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PAKKELISTE -->
+<section class="section" id="pakkeliste">
+  <p class="section-label">Forberedelse</p>
+  <h2 class="section-title"><em>Pakkeliste</em></h2>
+  <p class="section-body">Hytta leveres uten sengetøy og vaskeutstyr. Hak av etter hvert som du pakker — og legg gjerne til egne ting.</p>
+
+  <div class="packlist-wrap">
+    <div class="packlist-header">
+      <div class="pack-progress-wrap">
+        <div class="pack-progress-bar">
+          <div class="pack-progress-fill" id="progressFill"></div>
+        </div>
+        <span class="pack-progress-text" id="progressText">0 av 0 pakket</span>
+      </div>
+      <button class="pack-reset" onclick="resetPack()">Nullstill alle</button>
+    </div>
+
+    <div class="pack-items" id="packItems"></div>
+
+    <div class="add-item-row">
+      <input class="add-item-input" id="newItemInput" placeholder="Legg til noe du trenger…" onkeydown="if(event.key==='Enter') addItem()">
+      <button class="add-item-btn" onclick="addItem()">+ Legg til</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:300; color:rgba(242,237,230,0.6); margin-bottom:0.5rem;">God tur.</p>
+  <p>Nordbygdvegen 1710, 3570 Ål &nbsp;·&nbsp; Ål kommune, Hallingdal</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Stars ──
+const starsEl = document.getElementById('stars');
+for(let i=0;i<60;i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*60}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*4}s;opacity:${0.3+Math.random()*0.7};width:${1+Math.random()*2}px;height:${1+Math.random()*2}px`;
+  starsEl.appendChild(s);
+}
+
+// ── Nav scroll ──
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// ── Intersection observer ──
+const sections = document.querySelectorAll('.section');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+sections.forEach(s => obs.observe(s));
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ── Pakkeliste ──
+const DEFAULT_ITEMS = [
+  'Laken',
+  'Dynetrekk',
+  'Putetrekk',
+  'Håndklær',
+  'Kjøkkenklut og kjøkkenhåndkle',
+  'Gulvklut',
+  'Toalettpapir',
+  'Tørkerull',
+  'Søppelposer',
+  'Turtøy og utstyr',
+  'Badetøy (for den vågale)',
+  'Brettspill, kortspill eller andre leker',
+];
+
+const STORAGE_KEY = 'hyttetur-pakkeliste-v3';
+
+function loadPack() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e) {}
+  return DEFAULT_ITEMS.map(label => ({ label, done: false }));
+}
+
+function savePack(items) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch(e) {}
+}
+
+let pack = loadPack();
+
+function renderPack() {
+  const container = document.getElementById('packItems');
+  container.innerHTML = '';
+  pack.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'pack-item' + (item.done ? ' done' : '');
+    div.innerHTML = `
+      <div class="pack-check">${item.done ? '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}</div>
+      <span class="pack-label">${escHtml(item.label)}</span>
+      <button class="pack-delete" onclick="deleteItem(${i})" title="Fjern">✕</button>
+    `;
+    div.addEventListener('click', e => {
+      if(e.target.closest('.pack-delete')) return;
+      toggleItem(i);
+    });
+    container.appendChild(div);
+  });
+  updateProgress();
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggleItem(i) {
+  pack[i].done = !pack[i].done;
+  savePack(pack);
+  renderPack();
+  if(pack[i].done) showToast(pack[i].label + ' — pakket');
+}
+
+function deleteItem(i) {
+  pack.splice(i, 1);
+  savePack(pack);
+  renderPack();
+  showToast('Fjernet fra listen');
+}
+
+function addItem() {
+  const input = document.getElementById('newItemInput');
+  const val = input.value.trim();
+  if(!val) return;
+  pack.push({ label: val, done: false });
+  savePack(pack);
+  renderPack();
+  input.value = '';
+  showToast('Lagt til: ' + val);
+  document.getElementById('packItems').lastChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetPack() {
+  pack = pack.map(item => ({ ...item, done: false }));
+  savePack(pack);
+  renderPack();
+  showToast('Liste nullstilt');
+}
+
+function updateProgress() {
+  const done = pack.filter(i => i.done).length;
+  const total = pack.length;
+  const pct = total ? (done/total)*100 : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} av ${total} pakket`;
+}
+
+renderPack();
+</script>
+</body>
+</html>
